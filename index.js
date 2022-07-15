@@ -45,47 +45,111 @@ const enemy = new Sprite({
   position: { x: 400, y: 100 },
   velocity: { x: 0, y: 0 },
 });
+//slova za kretanje plejera
+const keys = {
+  a: {
+    pressed: false,
+  },
+  d: {
+    pressed: false,
+  },
+  w: {
+    pressed: false,
+  },
+};
 
 function animate() {
   //moramo izabrati jednu funkciju koja ce se reloudovati stalno
-  //frame po frame reloud sve dok ne kazemo da rikfest stane ici ce u beskonacnost
+  //frame po frame reloud sve dok ne kazemo da rikvest stane ici ce u beskonacnost
   window.requestAnimationFrame(animate);
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
   player.update();
   enemy.update();
+
+  /// stavljamo player.velocity. na x osi na 0 kako bi se player samo pomicao kada ga mi pritisnemo
+  player.velocity.x = 0;
+
+  //player funkcija kretanja
+  if (keys.a.pressed) {
+    player.velocity.x = -1;
+  } else if (keys.d.pressed) {
+    player.velocity.x = 1;
+  }
+
+    //enemy funkcija kretanja ////// moramo staviti ipak lastkey???????????
+    if (keys.ArrowLeft.pressed) {
+      player.velocity.x = -1;
+    } else if (keys.d.pressed) {
+      player.velocity.x = 1;
+    }
 }
 
 animate();
 
-
-//////Ovde smo stali//////
-
 //stavljamo event listner za svaki otkucaj na tastaturi ('keydown')
 
 window.addEventListener("keydown", (event) => {
-  //slucaj 1- ukoliko pritisnemo na tastaturi slovo d player se treba pomeriti 1px na x osi
   switch (event.key) {
+    //player igrac
+
+    //pomeranje na desno 1px x osa
     case "d":
-      player.velocity.x = 1;
+      keys.d.pressed = true;
       break;
+    //pomeranje na levo 1px x osa
     case "a":
-      player.velocity.x = -1;
+      keys.a.pressed = true;
+      break;
+    //pomeranje na gore -10px y osa
+    case "w":
+      player.velocity.y = -10;
+      break;
+
+    //enemy igrac
+
+    //pomeranje na desno 1px x osa
+    case "ArrowRight":
+      keys.ArrowRight.pressed = true;
+      break;
+    //pomeranje na levo 1px x osa
+    case "ArrowLeft":
+      keys.ArrowLeft.pressed = true;
+      break;
+    //pomeranje na gore -10px y osa
+    case "ArrowUp":
+      enemy.velocity.y = -10;
       break;
   }
   console.log(event);
 });
 
 window.addEventListener("keyup", (event) => {
-  //slucaj 2 - ukoliko pritisnemo na tastaturi slovo d player se treba pomeriti 1px  na x osi uvek kada pritisnemo dugme
   switch (event.key) {
     case "d":
-      player.velocity.x = 0;
+      keys.d.pressed = false;
       break;
-    //kada hocemo da se player pomera u levo
+
     case "a":
-      player.velocity.x = 0;
+      keys.a.pressed = false;
       break;
+    case "w":
+      keys.w.pressed = false;
+      break;
+
+      //enemy keys
+      switch (event.key) {
+        case "ArrowRight":
+          keys.ArrowRight.pressed = false;
+          break;
+
+        case "ArrowLeft":
+          keys.ArrowLeft.pressed = false;
+          break;
+        case "ArrowUp":
+          keys.ArrowUp.pressed = false;
+          break;
+      }
+      console.log(event);
   }
-  console.log(event);
 });
